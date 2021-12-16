@@ -1,0 +1,43 @@
+.App {
+  color:#eee;
+  height:100vh;
+  padding:10px;
+
+  header{
+    background-color:rgb(104, 9, 104);
+    padding:10px 20px;
+    height:60px;
+  }
+
+  main{
+    display:flex;
+    flex-direction:column;
+    height:100%;
+
+    form{
+      display:flex;
+      flex-direction:column;
+      flex-grow:1;
+      align-items: flex-start;
+
+      
+
+      // Style all inputs
+      input{
+
+      }
+    }
+
+    .output-window{
+      margin-top:10px;
+      padding:10px;
+      background-color:#4d4d4d;
+      height:250px;
+      overflow-y:auto;
+      // height:calc(100vh - 80px);
+    }
+  }
+
+}
+
+
