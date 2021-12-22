@@ -68,3 +68,9 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/d
 ### `npm run build` fails to minify
 
 This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+
+## Extra
+
+// TODO: Need a way to drag/drop to add an image
+//_ Image copied to /Runtime/Support folder (BEFORE manifest is generated)
+//_ Image is renamed to match naiming convention of DAZ*3D_996${ProductID-1}*${Product Name}.jpg

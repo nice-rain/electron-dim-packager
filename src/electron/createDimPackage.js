@@ -33,7 +33,7 @@ const buildManifest = (files) => {
 
   const xml = root.end({ pretty: true });
 
-  fs.writeFileSync("./build/Manifest.dsx", xml, function (err) {
+  fs.writeFileSync("./input/Manifest.dsx", xml, function (err) {
     if (err) throw err;
   });
 };
@@ -53,7 +53,7 @@ const buildSupplement = (productName) => {
 
   const xml = root.end({ pretty: true });
 
-  fs.writeFileSync("./build/Supplement.dsx", xml, function (err) {
+  fs.writeFileSync("./input/Supplement.dsx", xml, function (err) {
     if (err) throw err;
   });
 };
@@ -66,19 +66,19 @@ const extractZip = async (archivePath) => {
     const zip = new StreamZip.async({ file: archivePath });
     console.log("loading zip file");
 
-    if (fs.existsSync("build")) {
-      console.log("build exists, clearing folder");
-      fs.emptyDirSync("build");
+    if (fs.existsSync("input")) {
+      console.log("input exists, clearing folder");
+      fs.emptyDirSync("input");
     } else {
       console.log("making new build folder");
-      fs.mkdirSync("build");
+      fs.mkdirSync("input");
     }
 
     // TODO: Extract this to a build folder
     console.log("extracting zip contents");
-    await zip.extract(null, `${app.getAppPath()}/build/Content`);
+    await zip.extract(null, `${app.getAppPath()}/input/Content`);
 
-    console.log("contents extracted to build");
+    console.log("contents extracted to input");
     await zip.close();
   } catch (e) {
     console.log(e.message);
@@ -94,35 +94,21 @@ const getEntries = (dir, filelist = []) => {
     filelist = fs.statSync(path.join(dir, file)).isDirectory()
       ? getEntries(path.join(dir, file), filelist)
       : filelist.concat(
-          path.join(dir, file).replace(/\\/g, "/").replace("build/", "")
+          path.join(dir, file).replace(/\\/g, "/").replace("input/", "")
         );
   });
   return filelist;
 };
 
-// TODO: Need a way to drag/drop to add an image
-//* Image copied to /Runtime/Support folder (BEFORE manifest is generated)
-//* Image is renamed to match naiming convention of DAZ_3D_996${ProductID-1}_${Product Name}.jpg
-
 const buildZip = (productName) => {
-  zipper.sync.zip("./build/").compress().save(`./output/${productName}.zip`);
+  // make sure we have an output folder
+  if (!fs.existsSync("output")) {
+    console.log("output exists, clearing folder");
+    fs.mkdirSync("output");
+  }
+
+  zipper.sync.zip("./input/").compress().save(`./output/${productName}.zip`);
 };
-
-async function createDimPackage(args) {
-  const { archivePath, productId, productName, prefix } = args;
-  console.log("creating package");
-
-  //---await extractZip(archivePath);
-  //const files = getEntries("./build");
-
-  //buildManifest(files);
-  //buildSupplement("Test Product");
-
-  // TODO: Build a zip product name using the following:
-  //* ${Prefix}${ID starting with a 9 and padded with 0s, so an ID of 345 would be 90000345}-${01}_${Product Name}_ND
-
-  //buildZip("RO02623995-01_TestArchive");
-}
 
 // Synchronous
 ipcMain.on("create-dim-package", async (event, args) => {
@@ -136,6 +122,26 @@ ipcMain.on("create-dim-package", async (event, args) => {
     event.reply("create-dim-package-reply", "Unpacking zip file");
     await extractZip(archivePath);
   }
+
+  // Get our file directory structure
+  event.reply("create-dim-package-reply", "Building directory structure");
+  const files = getEntries("./input");
+
+  event.reply("create-dim-package-reply", "Building manifest file");
+  buildManifest(files);
+
+  event.reply("create-dim-package-reply", "Building supplement file");
+  buildSupplement(productName);
+
+  const archiveName = `${prefix}${productId}-01_${productName.replace(
+    /\s/g,
+    ""
+  )}_ND`;
+  event.reply(
+    "create-dim-package-reply",
+    `Creating archive with name: ${archiveName}`
+  );
+  buildZip(archiveName);
 
   event.reply("create-dim-package-reply", "finished!");
 });

@@ -121,7 +121,6 @@ function App() {
               type="checkbox"
               value={useZip}
               onChange={updateUseZip}
-              required
             />
             <label htmlFor="use-zip">Use Zip</label>
           </div>
@@ -135,7 +134,10 @@ function App() {
               required
             />
           ) : (
-            <p>Using /input folder to generate zip.</p>
+            <p>
+              Using /input/Content folder to generate zip file. Please make sure
+              library files are placed within it.
+            </p>
           )}
           <button>Submit</button>
         </form>
