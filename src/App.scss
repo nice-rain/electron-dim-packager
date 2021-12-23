@@ -1,43 +1,101 @@
 .App {
-  color:#eee;
-  height:100vh;
-  padding:10px;
+  color: #eee;
+  height: 100vh;
+  padding: 10px;
 
-  header{
-    background-color:rgb(104, 9, 104);
-    padding:10px 20px;
-    height:60px;
+  header {
+    background-color: rgb(104, 9, 104);
+    padding: 10px 20px;
+    height: 60px;
   }
 
-  main{
-    display:flex;
-    flex-direction:column;
-    height:100%;
+  main {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
 
-    form{
-      display:flex;
-      flex-direction:column;
-      flex-grow:1;
+    form {
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
       align-items: flex-start;
 
-      
+      .check-input {
+        display: flex;
+        align-items: center;
+        margin-bottom: 10px;
+
+        label,
+        input {
+          margin: 0;
+        }
+
+        input {
+          margin-right: 10px;
+        }
+      }
+
+      label {
+        margin-bottom: 5px;
+      }
 
       // Style all inputs
-      input{
+      input[type="text"] {
+        background-color: #4d4d4d;
+        height: 25px;
+        border: 1px solid #777;
+        border-radius: 4px;
+        transition: border-color 0.3s ease;
+        margin-bottom: 10px;
+        color: #ccc;
+        padding: 12px;
 
+        &:focus {
+          border-color: dodgerblue;
+          outline: none;
+        }
+      }
+
+      .button-container {
+        margin-top: 20px;
+
+        button {
+          border-radius: 0.2rem;
+          border: none;
+          padding: 5px;
+          min-width: 80px;
+          font-size: 1rem;
+          cursor: pointer;
+          color: #000;
+          font-weight: 500;
+          opacity: 0.9;
+
+          &:first-of-type {
+            margin-right: 10px;
+          }
+
+          &[type="reset"] {
+            background-color: rgb(255, 30, 30);
+          }
+
+          &[type="submit"] {
+            background-color: dodgerblue;
+          }
+
+          &:hover {
+            opacity: 1;
+          }
+        }
       }
     }
 
-    .output-window{
-      margin-top:10px;
-      padding:10px;
-      background-color:#4d4d4d;
-      height:250px;
-      overflow-y:auto;
+    .output-window {
+      margin-top: 10px;
+      padding: 10px;
+      background-color: #4d4d4d;
+      height: 250px;
+      overflow-y: auto;
       // height:calc(100vh - 80px);
     }
   }
-
 }
-
-

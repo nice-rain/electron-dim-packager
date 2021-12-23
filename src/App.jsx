@@ -35,6 +35,15 @@ function App() {
   const updateProductName = (e) => setProductName(e.target.value);
   const updateUseZip = (e) => setUseZip(e.target.checked);
 
+  const handleFormReset = (e) => {
+    setPrefix("RO");
+    setArchivePath("");
+    setPaddedId("");
+    setProductId("");
+    setProductName("");
+    setUseZip(false);
+  };
+
   const handleFormSubmit = (e) => {
     e.preventDefault();
 
@@ -83,7 +92,7 @@ function App() {
     <div className="App">
       {/* <header className="App-header"><h1>DIM Packager</h1></header> */}
       <main>
-        <form onSubmit={handleFormSubmit}>
+        <form onSubmit={handleFormSubmit} onReset={handleFormReset}>
           <label htmlFor="prefix">Prefix</label>
           <input
             id="prefix"
@@ -115,7 +124,7 @@ function App() {
             required
             accept=".zip"
           />
-          <div>
+          <div className="check-input">
             <input
               id="use-zip"
               type="checkbox"
@@ -130,6 +139,7 @@ function App() {
               id="archive"
               type="file"
               placeholder="Archive"
+              accept=".zip"
               onChange={handleFileChange}
               required
             />
@@ -139,7 +149,10 @@ function App() {
               library files are placed within it.
             </p>
           )}
-          <button>Submit</button>
+          <div className="button-container">
+            <button type="reset">Reset</button>
+            <button type="submit">Submit</button>
+          </div>
         </form>
 
         <div className="output">

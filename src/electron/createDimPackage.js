@@ -110,6 +110,19 @@ const buildZip = (productName) => {
   zipper.sync.zip("./input/").compress().save(`./output/${productName}.zip`);
 };
 
+// Empty our input folder to restore it to the original state
+const cleanInputFolder = async () => {
+  try {
+    if (fs.existsSync("input")) {
+      console.log("Resetting input folder");
+      fs.emptyDirSync("input");
+      fs.mkdirSync("input/Content");
+    }
+  } catch (e) {
+    console.log(e.message);
+  }
+};
+
 // Synchronous
 ipcMain.on("create-dim-package", async (event, args) => {
   console.log("Received IPC Message", args);
@@ -134,14 +147,20 @@ ipcMain.on("create-dim-package", async (event, args) => {
   buildSupplement(productName);
 
   const archiveName = `${prefix}${productId}-01_${productName.replace(
-    /\s/g,
+    /[^a-z0-9]+/gi,
     ""
-  )}_ND`;
+  )}`;
   event.reply(
     "create-dim-package-reply",
-    `Creating archive with name: ${archiveName}`
+    `Creating archive with name: ${archiveName}.zip`
   );
   buildZip(archiveName);
 
-  event.reply("create-dim-package-reply", "finished!");
+  event.reply("create-dim-package-reply", "Cleaning up input folder.");
+  cleanInputFolder();
+
+  event.reply(
+    "create-dim-package-reply",
+    "Finished! Archive can be found in the output folder."
+  );
 });
