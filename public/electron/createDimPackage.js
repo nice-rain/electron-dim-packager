@@ -33,7 +33,7 @@ const buildManifest = (files) => {
 
   const xml = root.end({ pretty: true });
 
-  fs.writeFileSync("./input/Manifest.dsx", xml, function (err) {
+  fs.writeFileSync(`${process.env.PORTABLE_EXECUTABLE_DIR}/input/Manifest.dsx`, xml, function (err) {
     if (err) throw err;
   });
 };
@@ -53,7 +53,7 @@ const buildSupplement = (productName) => {
 
   const xml = root.end({ pretty: true });
 
-  fs.writeFileSync("./input/Supplement.dsx", xml, function (err) {
+  fs.writeFileSync(`${process.env.PORTABLE_EXECUTABLE_DIR}/input/Supplement.dsx`, xml, function (err) {
     if (err) throw err;
   });
 };
@@ -76,7 +76,7 @@ const extractZip = async (archivePath) => {
 
     // TODO: Extract this to a build folder
     console.log("extracting zip contents");
-    await zip.extract(null, `${app.getAppPath()}/input/Content`);
+    await zip.extract(null, `${process.env.PORTABLE_EXECUTABLE_DIR}/input/Content`);
 
     console.log("contents extracted to input");
     await zip.close();
@@ -94,7 +94,7 @@ const getEntries = (dir, filelist = []) => {
     filelist = fs.statSync(path.join(dir, file)).isDirectory()
       ? getEntries(path.join(dir, file), filelist)
       : filelist.concat(
-          path.join(dir, file).replace(/\\/g, "/").replace("input/", "")
+          path.join(dir, file).replace(/\\/g, "/").replace(dir, "")
         );
   });
   return filelist;
@@ -107,7 +107,7 @@ const buildZip = (productName) => {
     fs.mkdirSync("output");
   }
 
-  zipper.sync.zip("./input/").compress().save(`./output/${productName}.zip`);
+  zipper.sync.zip(`${process.env.PORTABLE_EXECUTABLE_DIR}/input/`).compress().save(`${process.env.PORTABLE_EXECUTABLE_DIR}/output/${productName}.zip`);
 };
 
 // Empty our input folder to restore it to the original state
@@ -125,10 +125,16 @@ const cleanInputFolder = async () => {
 
 // Synchronous
 ipcMain.on("create-dim-package", async (event, args) => {
+
+
+
   console.log("Received IPC Message", args);
 
   // Extract our arguments
   const { archivePath, productId, productName, prefix, useZip } = args;
+
+  event.reply("create-dim-package-reply", `Our App path is: ${process.env.PORTABLE_EXECUTABLE_DIR}`);
+
 
   // Check to see if we are loading a zip file
   if (useZip) {
@@ -138,7 +144,7 @@ ipcMain.on("create-dim-package", async (event, args) => {
 
   // Get our file directory structure
   event.reply("create-dim-package-reply", "Building directory structure");
-  const files = getEntries("./input");
+  const files = getEntries(`${process.env.PORTABLE_EXECUTABLE_DIR}/input`);
 
   event.reply("create-dim-package-reply", "Building manifest file");
   buildManifest(files);
