@@ -4,7 +4,7 @@ const { app, BrowserWindow } = require("electron");
 const isDev = require("electron-is-dev");
 
 // Load our node.js process into the main context
-require("../src/electron/createDimPackage");
+require("./electron/createDimPackage");
 
 function createWindow() {
   // Create the browser window.
