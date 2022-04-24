@@ -1,70 +1,46 @@
-# Getting Started with Create React App
+# Electron Dim Packager
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This is an electron application for creating DIM packages for Daz Studio.
 
-## Available Scripts
+![Electron DIM Packager Screenshot](https://i.imgur.com/Gt8xSX4.png)
 
-In the project directory, you can run:
+# Features
 
-### `npm start`
+- Creates `Manifest.dsx` and `Supplement.dsx` files to allow DIM to install and uninstall packages.
+- Prints output to a built-in console
+- Allows for easy creation using a zip file (only if the .zip file contains library contents)
+- Packages all content back up in output directory
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## Getting Started
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+1. `npm install` to install dependencies
+2. In the electron-dim-packager repository, add directory for `input` and `ouput`
+3. In the `input` directory, add a `Content` directory.
+4. `npm run dev` to launch the electron development environment
 
-### `npm test`
+### Zip File
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Note: If you are using a .zip file, the directory structure must be flat and exactly how it would be installed to your library (directory needs to contain directories such as `data`, `people`, etc.)
 
-### `npm run build`
+- Check the box for `Use Zip` and select your .zip file.
+- Fill out other information such as `Product ID` and `Product Name`
+- Click submit
+- When finished, package will be in the `output` folder
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### No Zip File
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+- If you can't use a .zip file (such as when the .zip file starts with a `My Content` directory), you'll need to add all contents to the `input/Content` directory.
+- Once all files have been added to the `input/Content` directory, click the submit button to generate a new package
+- Package will be in the `output` folder
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## Tips
 
-### `npm run eject`
+- Packages need to be dropped into DIM's download directory, then refreshed.
+- Unchecking `Delete Package Once Installed` will allow DIM to keep an archive of packages (to make it easier to uninstall when you aren't using content)
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+## Future Work / Extensions
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+- Automatically generate `input\Content` and `output` directories when application loads for first time
+- Automatically scroll console down as it populates
+- Links to open `input` and `output` directories for easy access
+- Allow adding of images for smart content support
